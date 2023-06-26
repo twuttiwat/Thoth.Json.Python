@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Thoth.Json", "src\Thoth.Json.fsproj", "{E4905A84-E416-47B4-8BFB-BB02446B74EE}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Thoth.Json.Python", "src\Thoth.Json.Python.fsproj", "{E4905A84-E416-47B4-8BFB-BB02446B74EE}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Thoth.Tests", "tests\Thoth.Tests.fsproj", "{1CBF1A67-CB89-441C-A617-36D95DC77AB3}"
 EndProject

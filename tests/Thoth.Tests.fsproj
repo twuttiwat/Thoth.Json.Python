@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../src/Thoth.Json.fsproj" />
+    <ProjectReference Include="..\src\Thoth.Json.Python.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Util.fs" />
