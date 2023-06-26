@@ -10,10 +10,19 @@ module Decode =
     open Fable.Core.JsInterop
 
     module Helpers =
-        [<Emit("typeof $0")>]
+        [<ImportAll("json")>]
+        let jsonMod: obj = jsNative
+
+        [<ImportAll("math")>]
+        let mathMod: obj = jsNative
+
+        [<ImportAll("inspect")>]
+        let inspectMod: obj = jsNative
+
+        [<Emit("str(type($0))")>]
         let jsTypeof (_ : JsonValue) : string = jsNative
 
-        [<Emit("$0 instanceof SyntaxError")>]
+        [<Emit("type($0) is SyntaxError")>]
         let isSyntaxError (_ : JsonValue) : bool = jsNative
 
         let inline getField (fieldName: string) (o: JsonValue) = o?(fieldName)
@@ -21,33 +30,33 @@ module Decode =
 
         let inline isBoolean (o: JsonValue) : bool = o :? bool
 
-        let inline isNumber (o: JsonValue) : bool = jsTypeof o = "number"
+        [<Emit("type($0) is int")>]
+        let inline isNumber (_: JsonValue) : bool = jsNative
 
         let inline isArray (o: JsonValue) : bool = JS.Constructors.Array.isArray(o)
 
-        [<Emit("$0 === null ? false : (Object.getPrototypeOf($0 || false) === Object.prototype)")>]
-        let isObject (_ : JsonValue) : bool = jsNative
+        let isObject (o : JsonValue) : bool = inspectMod?isclass(o)
 
         let inline isNaN (o: JsonValue) : bool = JS.Constructors.Number.isNaN(!!o)
 
         let inline isNullValue (o: JsonValue): bool = isNull o
 
         /// is the value an integer? This returns false for 1.1, NaN, Infinite, ...
-        [<Emit("isFinite($0) && Math.floor($0) === $0")>]
-        let isIntegralValue (_: JsonValue) : bool = jsNative
+        let isIntegralValue (o: JsonValue) : bool = (mathMod?isnan(o) |> not) && (mathMod?floor(o) <> 0)
 
-        [<Emit("$1 <= $0 && $0 < $2")>]
+        [<Emit("($1 <= $0) and ($0 < $2)")>]
         let isBetweenInclusive(_v: JsonValue, _min: obj, _max: obj) = jsNative
 
-        [<Emit("isFinite($0) && !($0 % 1)")>]
+        [<Emit("($0 == $0) and isinstance($0, int)")>]
         let isIntFinite (_: JsonValue) : bool = jsNative
 
-        let isUndefined (o: JsonValue): bool = jsTypeof o = "undefined"
+        [<Emit("type($0) is NameError")>]
+        let isUndefined (_: JsonValue): bool = jsNative
 
-        [<Emit("JSON.stringify($0, null, 4) + ''")>]
-        let anyToString (_: JsonValue) : string = jsNative
+        let anyToString (o: JsonValue) : string = jsonMod?dumpx(o)
 
-        let inline isFunction (o: JsonValue) : bool = jsTypeof o = "function"
+        [<Emit("type($0) is function")>]
+        let inline isFunction (o: JsonValue) : bool = jsNative
 
         let inline objectKeys (o: JsonValue) : string seq = upcast JS.Constructors.Object.keys(o)
         let inline asBool (o: JsonValue): bool = unbox o

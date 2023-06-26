@@ -9,7 +9,7 @@ module Encode =
     open Fable.Core
     open Fable.Core.JsInterop
 
-    [<Emit("Array.from($0)")>]
+    [<Emit("list($0)")>]
     let private arrayFrom(x: JsonValue seq): JsonValue = jsNative
 
     ///**Description**
