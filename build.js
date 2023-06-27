@@ -62,7 +62,7 @@ const testHandler = async (argv) => {
     } else {
 
         await simpleSpawn(
-            "dotnet fable --outDir fableBuild",
+            "dotnet fable --lang py --outDir fableBuild",
             "./tests"
         )
 
