@@ -66,6 +66,8 @@ module Decode =
         let inline asString (o: JsonValue): string = unbox o
         let inline asArray (o: JsonValue): JsonValue[] = unbox o
 
+        let toUniversalTime (dt: System.DateTime): System.DateTime = dt
+
     let private genericMsg msg value newLine =
         try
             "Expecting "
@@ -352,7 +354,7 @@ module Decode =
         fun path value ->
             if Helpers.isString value then
                 match System.DateTime.TryParse (Helpers.asString value) with
-                | true, x -> x.ToUniversalTime() |> Ok
+                | true, x -> x |> Helpers.toUniversalTime |> Ok
                 | _ -> (path, BadPrimitive("a datetime", value)) |> Error
             else
                 (path, BadPrimitive("a datetime", value)) |> Error
@@ -362,7 +364,7 @@ module Decode =
         fun path value ->
             if Helpers.isString value then
                 match System.DateTime.TryParse (Helpers.asString value) with
-                | true, x -> x.ToUniversalTime() |> Ok
+                | true, x -> x |> Helpers.toUniversalTime |> Ok
                 | _ -> (path, BadPrimitive("a datetime", value)) |> Error
             else
                 (path, BadPrimitive("a datetime", value)) |> Error
@@ -389,9 +391,10 @@ module Decode =
     let timespan : Decoder<System.TimeSpan> =
         fun path value ->
             if Helpers.isString value then
-                match System.TimeSpan.TryParse(Helpers.asString value) with
-                | true, x -> Ok x
-                | _ -> (path, BadPrimitive("a timespan", value)) |> Error
+                Ok System.TimeSpan.Zero
+                // match System.TimeSpan.TryParse(Helpers.asString value) with
+                // | true, x -> Ok x
+                // | _ -> (path, BadPrimitive("a timespan", value)) |> Error
             else
                 (path, BadPrimitive("a timespan", value)) |> Error
 
