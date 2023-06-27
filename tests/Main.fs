@@ -2,8 +2,13 @@ module Tests.Main
 
 open Fable.Core
 
-let [<Global>] describe (name: string) (f: unit->unit) = jsNative
-let [<Global>] it (msg: string) (f: unit->unit) = jsNative
+let describe (name: string) (f: unit->unit) =
+    printfn "Describe: %s" name
+    f ()
+
+let it (msg: string) (f: unit->unit) =
+    printfn "Msg: %s" msg
+    f ()
 
 let run () =
     let tests = [ Tests.Decoders.tests
