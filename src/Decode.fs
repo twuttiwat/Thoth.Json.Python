@@ -7,23 +7,23 @@ module Decode =
 
     open System.Globalization
     open Fable.Core
-    open Fable.Core.JsInterop
+    open Fable.Core.PyInterop
 
     module Helpers =
         [<ImportAll("json")>]
-        let jsonMod: obj = jsNative
+        let jsonMod: obj = nativeOnly
 
         [<ImportAll("math")>]
-        let mathMod: obj = jsNative
+        let mathMod: obj = nativeOnly
 
         [<ImportAll("inspect")>]
-        let inspectMod: obj = jsNative
+        let inspectMod: obj = nativeOnly
 
         [<Emit("str(type($0))")>]
-        let jsTypeof (_ : JsonValue) : string = jsNative
+        let jsTypeof (_ : JsonValue) : string = nativeOnly
 
         [<Emit("type($0) is SyntaxError")>]
-        let isSyntaxError (_ : JsonValue) : bool = jsNative
+        let isSyntaxError (_ : JsonValue) : bool = nativeOnly
 
         let inline getField (fieldName: string) (o: JsonValue) = o?(fieldName)
         let inline isString (o: JsonValue) : bool = o :? string
@@ -31,7 +31,7 @@ module Decode =
         let inline isBoolean (o: JsonValue) : bool = o :? bool
 
         [<Emit("type($0) is int")>]
-        let inline isNumber (_: JsonValue) : bool = jsNative
+        let inline isNumber (_: JsonValue) : bool = nativeOnly
 
         let inline isArray (o: JsonValue) : bool = JS.Constructors.Array.isArray(o)
 
@@ -45,18 +45,18 @@ module Decode =
         let isIntegralValue (o: JsonValue) : bool = (mathMod?isnan(o) |> not) && (mathMod?floor(o) <> 0)
 
         [<Emit("($1 <= $0) and ($0 < $2)")>]
-        let isBetweenInclusive(_v: JsonValue, _min: obj, _max: obj) = jsNative
+        let isBetweenInclusive(_v: JsonValue, _min: obj, _max: obj) = nativeOnly
 
         [<Emit("($0 == $0) and isinstance($0, int)")>]
-        let isIntFinite (_: JsonValue) : bool = jsNative
+        let isIntFinite (_: JsonValue) : bool = nativeOnly
 
         [<Emit("type($0) is NameError")>]
-        let isUndefined (_: JsonValue): bool = jsNative
+        let isUndefined (_: JsonValue): bool = nativeOnly
 
         let anyToString (o: JsonValue) : string = jsonMod?dumpx(o)
 
         [<Emit("type($0) is function")>]
-        let inline isFunction (o: JsonValue) : bool = jsNative
+        let inline isFunction (o: JsonValue) : bool = nativeOnly
 
         let inline objectKeys (o: JsonValue) : string seq = upcast JS.Constructors.Object.keys(o)
         let inline asBool (o: JsonValue): bool = unbox o

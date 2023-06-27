@@ -7,10 +7,10 @@ module Encode =
     open System.Collections.Generic
     open System.Globalization
     open Fable.Core
-    open Fable.Core.JsInterop
+    open Fable.Core.PyInterop
 
     [<Emit("list($0)")>]
-    let private arrayFrom(x: JsonValue seq): JsonValue = jsNative
+    let private arrayFrom(x: JsonValue seq): JsonValue = nativeOnly
 
     ///**Description**
     /// Encode a string
