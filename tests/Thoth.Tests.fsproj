@@ -7,7 +7,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Util.fs" />
-    <Compile Include="Types.fs" />
+    <Compile Include="Types1.fs" />
     <Compile Include="Decoders.fs" />
     <Compile Include="Encoders.fs" />
     <Compile Include="BackAndForth.fs" />
