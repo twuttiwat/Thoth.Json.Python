@@ -19,27 +19,33 @@ module Decode =
         [<ImportAll("inspect")>]
         let inspectMod: obj = nativeOnly
 
+
         [<Emit("str(type($0))")>]
         let jsTypeof (_ : JsonValue) : string = nativeOnly
 
-        [<Emit("type($0) is SyntaxError")>]
-        let isSyntaxError (_ : JsonValue) : bool = nativeOnly
+        //[<Emit("type($0) is json.decoder.JSONDecoderError or type($0) is json.encoder.JSONEncoderError")>]
+        let isSyntaxError (o : JsonValue) : bool =
+            jsTypeof o = """<class 'json.decoder.JSONDecodeError'>""" ||
+            jsTypeof o = """<class 'json.encoder.JSONEncodeError'>"""
 
-        let inline getField (fieldName: string) (o: JsonValue) = o?(fieldName)
+        let inline getField (fieldName: string) (o: JsonValue) = o?get(fieldName)
         let inline isString (o: JsonValue) : bool = o :? string
 
         let inline isBoolean (o: JsonValue) : bool = o :? bool
 
-        [<Emit("type($0) is int")>]
+        [<Emit("type($0) is int or type($0) is float")>]
         let inline isNumber (_: JsonValue) : bool = nativeOnly
 
-        let inline isArray (o: JsonValue) : bool = JS.Constructors.Array.isArray(o)
+        [<Emit("type($0) is not str and hasattr($0, '__len__')")>]
+        let inline isArray (_: JsonValue) : bool = nativeOnly
 
-        let isObject (o : JsonValue) : bool = inspectMod?isclass(o)
+        [<Emit("isinstance($0, dict)")>]
+        let isObject (_: JsonValue) : bool = nativeOnly
 
-        let inline isNaN (o: JsonValue) : bool = JS.Constructors.Number.isNaN(!!o)
+        let inline isNaN (o: JsonValue) : bool = mathMod?isnan(o)
 
-        let inline isNullValue (o: JsonValue): bool = isNull o
+        [<Emit("$0 is None")>]
+        let inline isNullValue (_: JsonValue): bool = nativeOnly
 
         /// is the value an integer? This returns false for 1.1, NaN, Infinite, ...
         let isIntegralValue (o: JsonValue) : bool = (mathMod?isnan(o) |> not) && (mathMod?floor(o) <> 0)
@@ -50,15 +56,17 @@ module Decode =
         [<Emit("($0 == $0) and isinstance($0, int)")>]
         let isIntFinite (_: JsonValue) : bool = nativeOnly
 
-        [<Emit("type($0) is NameError")>]
+        [<Emit("$0 is None")>]
         let isUndefined (_: JsonValue): bool = nativeOnly
 
-        let anyToString (o: JsonValue) : string = jsonMod?dumpx(o)
+        let anyToString (o: JsonValue) : string = jsonMod?dumps(o)
 
         [<Emit("type($0) is function")>]
-        let inline isFunction (o: JsonValue) : bool = nativeOnly
+        let inline isFunction (_: JsonValue) : bool = nativeOnly
 
-        let inline objectKeys (o: JsonValue) : string seq = upcast JS.Constructors.Object.keys(o)
+        [<Emit("list($0.keys())")>]
+        let inline objectKeys (_: JsonValue) : string seq = nativeOnly
+
         let inline asBool (o: JsonValue): bool = unbox o
         let inline asInt (o: JsonValue): int = unbox o
         let inline asFloat (o: JsonValue): float = unbox o
@@ -151,7 +159,7 @@ module Decode =
     let fromString (decoder : Decoder<'T>) =
         fun value ->
             try
-               let json = JS.JSON.parse value
+               let json = Helpers.jsonMod?loads value
                fromValue "$" decoder json
             with
                 | ex when Helpers.isSyntaxError ex ->
@@ -1193,7 +1201,7 @@ module Decode =
             | "" -> extra
             | fullName -> extra |> Map.add fullName decoderRef
         let decoder =
-            if FSharpType.IsRecord(t, allowAccessToPrivateRepresentation=true) then
+            if FSharpType.IsRecord(t) then
                 let decoders =
                     FSharpType.GetRecordFields(t, allowAccessToPrivateRepresentation=true)
                     |> Array.map (fun fi ->
@@ -1203,7 +1211,7 @@ module Decode =
                     autoObject decoders path value
                     |> Result.map (fun xs -> FSharpValue.MakeRecord(t, List.toArray xs, allowAccessToPrivateRepresentation=true))
 
-            elif FSharpType.IsUnion(t, allowAccessToPrivateRepresentation=true) then
+            elif FSharpType.IsUnion(t) then
                 fun path (value: JsonValue) ->
                     if Helpers.isString(value) then
                         let name = Helpers.asString value

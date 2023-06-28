@@ -9,6 +9,10 @@ module Encode =
     open Fable.Core
     open Fable.Core.PyInterop
 
+    module Helpers =
+        [<ImportAll("json")>]
+        let jsonMod: obj = nativeOnly
+
     [<Emit("list($0)")>]
     let private arrayFrom(x: JsonValue seq): JsonValue = nativeOnly
 
@@ -363,7 +367,7 @@ module Encode =
     ///**Exceptions**
     ///
     let toString (space: int) (value: JsonValue) : string =
-       JS.JSON.stringify(value, space=space)
+       Helpers.jsonMod?dumps(value)
 
     ///**Description**
     /// Encode an option
@@ -402,7 +406,7 @@ module Encode =
             | "" -> extra
             | fullName -> extra |> Map.add fullName encoderRef
         let encoder =
-            if FSharpType.IsRecord(t, allowAccessToPrivateRepresentation=true) then
+            if FSharpType.IsRecord(t) then
                 let setters =
                     FSharpType.GetRecordFields(t, allowAccessToPrivateRepresentation=true)
                     |> Array.map (fun fi ->
@@ -415,7 +419,7 @@ module Encode =
                             target)
                 fun (source: obj) ->
                     (JsonValue(), setters) ||> Seq.fold (fun target set -> set source target)
-            elif FSharpType.IsUnion(t, allowAccessToPrivateRepresentation=true) then
+            elif FSharpType.IsUnion(t) then
                 fun (value: obj) ->
                     let info, fields = FSharpValue.GetUnionFields(value, t, allowAccessToPrivateRepresentation=true)
                     match fields.Length with
