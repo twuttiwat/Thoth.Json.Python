@@ -41,23 +41,32 @@ const testHandler = async (argv) => {
     if (argv.watch) {
         concurrently([
             {
-                command: "dotnet fable --watch --outDir fableBuild",
-                cwd: "./tests",
+                // command: "dotnet fable --watch --outDir fableBuild",
+                command: "dotnet fable watch tests --lang py --outDir tests/fableBuild --runWatch python -m pytest tests/fableBuild/main.py",
+                //command: "dotnet fable --watch src --outDir fableBuild --run python -m pytest ./tests/fableBuild/main.py",
+                // cwd: "./tests",
                 name: "Fable",
                 prefixColor: "magenta"
             },
             // We use nodemon for watching the tests files
             // because mocha doesn't support watching ESM files yet
-            {
-                command: `npx nodemon \
---watch fableBuild \
---delay 150ms \
---exec "npx mocha fableBuild --reporter dot"
-                `,
-                cwd: "./tests",
-                name: "Mocha",
-                prefixColor: "cyan"
-            }
+//             {
+//                 command: `npx nodemon \
+// --watch fableBuild \
+// --delay 150ms \
+// --exec "npx mocha fableBuild --reporter dot"
+//                 `,
+//                 cwd: "./tests",
+//                 name: "Mocha",
+//                 prefixColor: "cyan"
+//             }
+
+            // {
+            //     command: 'python -m pytest ./tests/fableBuild/main.py',
+            //     cwd: "./tests",
+            //     name: "PyTest",
+            //     prefixColor: "cyan"
+            // }
         ])
     } else {
 
