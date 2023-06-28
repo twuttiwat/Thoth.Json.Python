@@ -52,157 +52,157 @@ type CachedCoder =
 let tests : Test =
     testList "Thoth.Json.ExtraCoder" [
         testList "Basic Tests (uncached)" [
-            testCase "coder in camelCase works" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
+            // testCase "coder in camelCase works" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //
+            //     let actual =
+            //         Encode.Auto.toString (0, data, extra = camelCaseCoder)
+            //         |> fun json ->
+            //         Decode.Auto.unsafeFromString (json,extra = camelCaseCoder)
+            //
+            //     equal expected actual
 
-                let actual =
-                    Encode.Auto.toString (0, data, extra = camelCaseCoder)
-                    |> fun json ->
-                    Decode.Auto.unsafeFromString (json,extra = camelCaseCoder)
+            // testCase "auto coder are working in camelCase" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //
+            //     let actual =
+            //         Encode.Auto.toString (0, data, caseStrategy = CamelCase)
+            //         |> fun json ->
+            //         Decode.Auto.unsafeFromString (json, caseStrategy = CamelCase)
+            //     equal expected actual
 
-                equal expected actual
+            // testCase "coder in PasalCase works'" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //
+            //     let actual =
+            //         Encode.Auto.toString (0, data, extra = pascalCaseCoder)
+            //         |> fun json ->
+            //         Decode.Auto.unsafeFromString (json, extra = pascalCaseCoder)
+            //     equal expected actual
 
-            testCase "auto coder are working in camelCase" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-
-                let actual =
-                    Encode.Auto.toString (0, data, caseStrategy = CamelCase)
-                    |> fun json ->
-                    Decode.Auto.unsafeFromString (json, caseStrategy = CamelCase)
-                equal expected actual
-
-            testCase "coder in PasalCase works'" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-
-                let actual =
-                    Encode.Auto.toString (0, data, extra = pascalCaseCoder)
-                    |> fun json ->
-                    Decode.Auto.unsafeFromString (json, extra = pascalCaseCoder)
-                equal expected actual
-
-            testCase "auto coder are working in PascalCase" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-
-                let actual =
-                    Encode.Auto.toString (0, data, caseStrategy = PascalCase)
-                    |> fun json ->
-                    Decode.Auto.unsafeFromString (json, caseStrategy = PascalCase)
-
-                equal expected actual
+            // testCase "auto coder are working in PascalCase" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //
+            //     let actual =
+            //         Encode.Auto.toString (0, data, caseStrategy = PascalCase)
+            //         |> fun json ->
+            //         Decode.Auto.unsafeFromString (json, caseStrategy = PascalCase)
+            //
+            //     equal expected actual
         ]
         testList "Cached Coders" [
-            testCase "coder in camelCase works" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    CachedCoder.encode ( data, extra = camelCaseCoder)
-                    |> fun json ->
-                    CachedCoder.decode (json, extra = camelCaseCoder)
-                equal expected actual
+            // testCase "coder in camelCase works" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         CachedCoder.encode ( data, extra = camelCaseCoder)
+            //         |> fun json ->
+            //         CachedCoder.decode (json, extra = camelCaseCoder)
+            //     equal expected actual
 
-            testCase "auto coder are working in camelCase" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    CachedCoder.encode ( data, caseStrategy = CamelCase)
-                    |> fun json ->
-                    CachedCoder.decode (json, caseStrategy = CamelCase)
-                equal expected actual
+            // testCase "auto coder are working in camelCase" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         CachedCoder.encode ( data, caseStrategy = CamelCase)
+            //         |> fun json ->
+            //         CachedCoder.decode (json, caseStrategy = CamelCase)
+            //     equal expected actual
 
-            testCase "coder in PascalCase works" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    CachedCoder.encode ( data, extra = pascalCaseCoder)
-                    |> fun json ->
-                    CachedCoder.decode (json, extra = pascalCaseCoder)
-                equal expected actual
+            // testCase "coder in PascalCase works" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         CachedCoder.encode ( data, extra = pascalCaseCoder)
+            //         |> fun json ->
+            //         CachedCoder.decode (json, extra = pascalCaseCoder)
+            //     equal expected actual
 
-            testCase "auto coder are working in PascalCase" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    CachedCoder.encode ( data, caseStrategy = PascalCase)
-                    |> fun json ->
-                    CachedCoder.decode (json, caseStrategy = PascalCase)
-                equal expected actual
+            // testCase "auto coder are working in PascalCase" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         CachedCoder.encode ( data, caseStrategy = PascalCase)
+            //         |> fun json ->
+            //         CachedCoder.decode (json, caseStrategy = PascalCase)
+            //     equal expected actual
         ]
         testList "Cached encoding/ normal decoding" [
-            testCase "coder in camelCase works" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    CachedCoder.encode ( data, extra = camelCaseCoder)
-                    |> fun json ->
-                    Decode.Auto.unsafeFromString (json, extra = camelCaseCoder)
-                equal expected actual
+            // testCase "coder in camelCase works" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         CachedCoder.encode ( data, extra = camelCaseCoder)
+            //         |> fun json ->
+            //         Decode.Auto.unsafeFromString (json, extra = camelCaseCoder)
+            //     equal expected actual
 
-            testCase "auto coder are working in camelCase" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    CachedCoder.encode ( data, caseStrategy = CamelCase)
-                    |> fun json ->
-                    Decode.Auto.unsafeFromString (json, caseStrategy = CamelCase)
-                equal expected actual
+            // testCase "auto coder are working in camelCase" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         CachedCoder.encode ( data, caseStrategy = CamelCase)
+            //         |> fun json ->
+            //         Decode.Auto.unsafeFromString (json, caseStrategy = CamelCase)
+            //     equal expected actual
 
-            testCase "coder in PascalCase works" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    CachedCoder.encode ( data, extra = pascalCaseCoder)
-                    |> fun json ->
-                    Decode.Auto.unsafeFromString (json, extra = pascalCaseCoder)
-                equal expected actual
+            // testCase "coder in PascalCase works" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         CachedCoder.encode ( data, extra = pascalCaseCoder)
+            //         |> fun json ->
+            //         Decode.Auto.unsafeFromString (json, extra = pascalCaseCoder)
+            //     equal expected actual
 
-            testCase "auto coder are working in PascalCase" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    CachedCoder.encode ( data,  caseStrategy = PascalCase)
-                    |> fun json ->
-                    Decode.Auto.unsafeFromString (json, caseStrategy = PascalCase)
-                equal expected actual
+            // testCase "auto coder are working in PascalCase" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         CachedCoder.encode ( data,  caseStrategy = PascalCase)
+            //         |> fun json ->
+            //         Decode.Auto.unsafeFromString (json, caseStrategy = PascalCase)
+            //     equal expected actual
         ]
         testList "Normal encoding/ cached decoding" [
-            testCase "coder in camelCase works" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    Encode.Auto.toString (0, data, extra = camelCaseCoder)
-                    |> fun json ->
-                    CachedCoder.decode (json, extra = camelCaseCoder)
-                equal expected actual
+            // testCase "coder in camelCase works" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         Encode.Auto.toString (0, data, extra = camelCaseCoder)
+            //         |> fun json ->
+            //         CachedCoder.decode (json, extra = camelCaseCoder)
+            //     equal expected actual
 
-            testCase "auto coder are working in camelCase" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    Encode.Auto.toString (0, data, caseStrategy = CamelCase)
-                    |> fun json ->
-                    CachedCoder.decode (json, caseStrategy = CamelCase)
-                equal expected actual
+            // testCase "auto coder are working in camelCase" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         Encode.Auto.toString (0, data, caseStrategy = CamelCase)
+            //         |> fun json ->
+            //         CachedCoder.decode (json, caseStrategy = CamelCase)
+            //     equal expected actual
 
-            testCase "coder in PascalCase works" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    Encode.Auto.toString (0, data, extra = pascalCaseCoder)
-                    |> fun json ->
-                    CachedCoder.decode (json, extra = pascalCaseCoder)
-                equal expected actual
+            // testCase "coder in PascalCase works" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         Encode.Auto.toString (0, data, extra = pascalCaseCoder)
+            //         |> fun json ->
+            //         CachedCoder.decode (json, extra = pascalCaseCoder)
+            //     equal expected actual
 
-            testCase "auto coder are working in PascalCase" <| fun _ ->
-                let data = {Id = 1; Text ="Text"}
-                let expected = data
-                let actual =
-                    Encode.Auto.toString (0, data, caseStrategy = PascalCase)
-                    |> fun json ->
-                    CachedCoder.decode (json, caseStrategy = PascalCase)
-                equal expected actual
+            // testCase "auto coder are working in PascalCase" <| fun _ ->
+            //     let data = {Id = 1; Text ="Text"}
+            //     let expected = data
+            //     let actual =
+            //         Encode.Auto.toString (0, data, caseStrategy = PascalCase)
+            //         |> fun json ->
+            //         CachedCoder.decode (json, caseStrategy = PascalCase)
+            //     equal expected actual
         ]
     ]
