@@ -8,6 +8,7 @@ module Decode =
     open System.Globalization
     open Fable.Core
     open Fable.Core.PyInterop
+    open Python.Interop.Json
 
     module Helpers =
         [<ImportAll("json")>]
@@ -59,7 +60,8 @@ module Decode =
         [<Emit("$0 is None")>]
         let isUndefined (_: JsonValue): bool = nativeOnly
 
-        let anyToString (o: JsonValue) : string = jsonMod?dumps(o)
+        // let anyToString (o: JsonValue) : string = jsonMod?dumps(o)
+        let anyToString (o: JsonValue) : string = json.dumps(o)
 
         [<Emit("type($0) is function")>]
         let inline isFunction (_: JsonValue) : bool = nativeOnly
@@ -159,7 +161,8 @@ module Decode =
     let fromString (decoder : Decoder<'T>) =
         fun value ->
             try
-               let json = Helpers.jsonMod?loads value
+               // let json = Helpers.jsonMod?loads value
+               let json = json.loads value
                fromValue "$" decoder json
             with
                 | ex when Helpers.isSyntaxError ex ->

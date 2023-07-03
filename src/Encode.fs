@@ -10,11 +10,19 @@ module Encode =
     open Fable.Core.PyInterop
 
     module Helpers =
+        open Python.Interop.Json
+
         [<ImportAll("json")>]
         let jsonMod: obj = nativeOnly
 
+        let toString (space:int) (o:JsonValue): string =
+            if space = 0 then
+                json2.dumps(o, None, (",",":") )
+            else
+                json2.dumps(o, (Some space), (",",":") )
+
     [<Emit("list($0)")>]
-    let private arrayFrom(x: JsonValue seq): JsonValue = nativeOnly
+    let private arrayFrom(_: JsonValue seq): JsonValue = nativeOnly
 
     ///**Description**
     /// Encode a string
@@ -367,7 +375,8 @@ module Encode =
     ///**Exceptions**
     ///
     let toString (space: int) (value: JsonValue) : string =
-       Helpers.jsonMod?dumps(value)
+       Helpers.toString space value
+       // Helpers.jsonMod?dumps(value)
 
     ///**Description**
     /// Encode an option

@@ -18,6 +18,7 @@ If you are interested on using it against .NET Core or .NET Framework, please us
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Interop/Json.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Decode.fs" />
     <Compile Include="Encode.fs" />
