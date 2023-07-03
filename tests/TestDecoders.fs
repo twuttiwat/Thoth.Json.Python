@@ -706,85 +706,85 @@ Expecting a bigint but instead got: "maxime"
 
                 equal expected actual
 
-            // testCase "tuple4 works" <| fun _ ->
-            //     let json = """[1, "maxime", 2.5, { "fieldA" : "test" }]"""
-            //     let expected = Ok(1, "maxime", 2.5, { fieldA = "test" })
-            //
-            //     let actual =
-            //         Decode.fromString
-            //             (Decode.tuple4
-            //                 Decode.int
-            //                 Decode.string
-            //                 Decode.float
-            //                 SmallRecord.Decoder) json
-            //
-            //     equal expected actual
-            //
-            // testCase "tuple5 works" <| fun _ ->
-            //     let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false]"""
-            //     let expected = Ok(1, "maxime", 2.5, { fieldA = "test" }, false)
-            //
-            //     let actual =
-            //         Decode.fromString
-            //             (Decode.tuple5
-            //                 Decode.int
-            //                 Decode.string
-            //                 Decode.float
-            //                 SmallRecord.Decoder
-            //                 Decode.bool) json
-            //
-            //     equal expected actual
-            //
-            // testCase "tuple6 works" <| fun _ ->
-            //     let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false, null]"""
-            //     let expected = Ok(1, "maxime", 2.5, { fieldA = "test" }, false, null)
-            //
-            //     let actual =
-            //         Decode.fromString
-            //             (Decode.tuple6
-            //                 Decode.int
-            //                 Decode.string
-            //                 Decode.float
-            //                 SmallRecord.Decoder
-            //                 Decode.bool
-            //                 (Decode.nil null)) json
-            //
-            //     equal expected actual
-            //
-            // testCase "tuple7 works" <| fun _ ->
-            //     let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false, null, 56]"""
-            //     let expected = Ok(1, "maxime", 2.5, { fieldA = "test" }, false, null, 56)
-            //
-            //     let actual =
-            //         Decode.fromString
-            //             (Decode.tuple7
-            //                 Decode.int
-            //                 Decode.string
-            //                 Decode.float
-            //                 SmallRecord.Decoder
-            //                 Decode.bool
-            //                 (Decode.nil null)
-            //                 Decode.int) json
-            //
-            //     equal expected actual
-            //
-            // testCase "tuple8 works" <| fun _ ->
-            //     let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false, null, true, 98]"""
-            //     let expected = Ok(1, "maxime", 2.5, { fieldA = "test" }, false, null, true, 98)
-            //
-            //     let actual =
-            //         Decode.fromString
-            //             (Decode.tuple8
-            //                 Decode.int
-            //                 Decode.string
-            //                 Decode.float
-            //                 SmallRecord.Decoder
-            //                 Decode.bool
-            //                 (Decode.nil null)
-            //                 Decode.bool
-            //                 Decode.int) json
-            //
-            //     equal expected actual
+            testCase "tuple4 works" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : "test" }]"""
+                let expected = Ok(1, "maxime", 2.5, { fieldA = "test" })
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple4
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder) json
+
+                equal expected actual
+
+            testCase "tuple5 works" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false]"""
+                let expected = Ok(1, "maxime", 2.5, { fieldA = "test" }, false)
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple5
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder
+                            Decode.bool) json
+
+                equal expected actual
+
+            testCase "tuple6 works" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false, null]"""
+                let expected = Ok(1, "maxime", 2.5, { fieldA = "test" }, false, null)
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple6
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder
+                            Decode.bool
+                            (Decode.nil null)) json
+
+                equal expected actual
+
+            testCase "tuple7 works" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false, null, 56]"""
+                let expected = Ok(1, "maxime", 2.5, { fieldA = "test" }, false, null, 56)
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple7
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder
+                            Decode.bool
+                            (Decode.nil null)
+                            Decode.int) json
+
+                equal expected actual
+
+            testCase "tuple8 works" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false, null, true, 98]"""
+                let expected = Ok(1, "maxime", 2.5, { fieldA = "test" }, false, null, true, 98)
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple8
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder
+                            Decode.bool
+                            (Decode.nil null)
+                            Decode.bool
+                            Decode.int) json
+
+                equal expected actual
 
             testCase "tuple2 returns an error if invalid json" <| fun _ ->
                 let json = """[1, false, "unused value"]"""
@@ -819,6 +819,11 @@ Expecting a float but instead got: false
                             Decode.string
                             Decode.float) json
 
+                match actual with
+                | Error msg ->
+                    printfn "tuple3 error %s" msg
+                | Ok _ -> printfn "Okay"
+
                 equal expected actual
 
 //             testCase "tuple4 returns an error if invalid json (missing index)" <| fun _ ->
@@ -843,47 +848,52 @@ Expecting a float but instead got: false
 //                             Decode.float
 //                             SmallRecord.Decoder) json
 //
-//                 equal expected actual
-//
-//             testCase "tuple4 returns an error if invalid json (error in the nested object)" <| fun _ ->
-//                 let json = """[1, "maxime", 2.5, { "fieldA" : false }]"""
-//                 let expected =
-//                     Error(
-//                         """
-// Error at: `$.[3].fieldA`
-// Expecting a string but instead got: false
-//                         """.Trim())
-//
-//                 let actual =
-//                     Decode.fromString
-//                         (Decode.tuple4
-//                             Decode.int
-//                             Decode.string
-//                             Decode.float
-//                             SmallRecord.Decoder) json
+//                 match actual with
+//                 | Error msg ->
+//                     printfn "tuple4 error %s" msg
+//                 | Ok _ -> printfn "Okay"
 //
 //                 equal expected actual
-//
-//             testCase "tuple5 returns an error if invalid json" <| fun _ ->
-//                 let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false]"""
-//                 let expected =
-//                     Error(
-//                         """
-// Error at: `$.[4]`
-// Expecting a datetime but instead got: false
-//                         """.Trim())
-//
-//                 let actual =
-//                     Decode.fromString
-//                         (Decode.tuple5
-//                             Decode.int
-//                             Decode.string
-//                             Decode.float
-//                             SmallRecord.Decoder
-//                             Decode.datetimeUtc) json
-//
-//                 equal expected actual
-//
+
+            testCase "tuple4 returns an error if invalid json (error in the nested object)" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : false }]"""
+                let expected =
+                    Error(
+                        """
+Error at: `$.[3].fieldA`
+Expecting a string but instead got: false
+                        """.Trim())
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple4
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder) json
+
+                equal expected actual
+
+            testCase "tuple5 returns an error if invalid json" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, false]"""
+                let expected =
+                    Error(
+                        """
+Error at: `$.[4]`
+Expecting a datetime but instead got: false
+                        """.Trim())
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple5
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder
+                            Decode.datetimeUtc) json
+
+                equal expected actual
+
 //             testCase "tuple6 returns an error if invalid json" <| fun _ ->
 //                 let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, "2018-10-01T11:12:55.00Z", false]"""
 //                 let expected =
@@ -904,7 +914,7 @@ Expecting a float but instead got: false
 //                             (Decode.nil null)) json
 //
 //                 equal expected actual
-//
+
 //             testCase "tuple7 returns an error if invalid json" <| fun _ ->
 //                 let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, "2018-10-01T11:12:55.00Z", null, false]"""
 //                 let expected =
@@ -926,7 +936,7 @@ Expecting a float but instead got: false
 //                             Decode.int) json
 //
 //                 equal expected actual
-//
+
 //             testCase "tuple8 returns an error if invalid json" <| fun _ ->
 //                 let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, "2018-10-01T11:12:55.00Z", null, 56, "maxime"]"""
 //                 let expected =
