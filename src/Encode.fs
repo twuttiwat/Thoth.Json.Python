@@ -217,11 +217,13 @@ module Encode =
     let inline uint32 (value : uint32) : JsonValue =
         box value
 
-    let int64 (value : int64) : JsonValue =
-        box (value.ToString(CultureInfo.InvariantCulture))
+    [<Emit("str($0)")>]
+    let int64 (_ : int64) : JsonValue = nativeOnly
+        // box (value.ToString(CultureInfo.InvariantCulture))
 
-    let uint64 (value : uint64) : JsonValue =
-        box (value.ToString(CultureInfo.InvariantCulture))
+    [<Emit("str($0)")>]
+    let uint64 (_ : uint64) : JsonValue = nativeOnly
+        // box (value.ToString(CultureInfo.InvariantCulture))
 
     let unit () : JsonValue =
         box null
