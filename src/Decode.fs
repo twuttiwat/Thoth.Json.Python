@@ -76,7 +76,8 @@ module Decode =
         let inline asString (o: JsonValue): string = unbox o
         let inline asArray (o: JsonValue): JsonValue[] = unbox o
 
-        let toUniversalTime (dt: System.DateTime): System.DateTime = dt
+        [<Emit("$0.replace(tzinfo=None)")>]
+        let toUniversalTime (_: System.DateTime): System.DateTime = nativeOnly
 
     let private genericMsg msg value newLine =
         try
