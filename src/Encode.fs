@@ -424,7 +424,7 @@ module Encode =
         let encoder =
             if FSharpType.IsRecord(t) then
                 let setters =
-                    FSharpType.GetRecordFields(t, allowAccessToPrivateRepresentation=true)
+                    FSharpType.GetRecordFields(t)
                     |> Array.map (fun fi ->
                         let targetKey = Util.Casing.convert caseStrategy fi.Name
                         let encode = autoEncoder extra caseStrategy skipNullField fi.PropertyType
@@ -437,7 +437,7 @@ module Encode =
                     (createObj [], setters) ||> Seq.fold (fun target set -> set source target)
             elif FSharpType.IsUnion(t) then
                 fun (value: obj) ->
-                    let info, fields = FSharpValue.GetUnionFields(value, t, allowAccessToPrivateRepresentation=true)
+                    let info, fields = FSharpValue.GetUnionFields(value, t)
                     match fields.Length with
                     | 0 -> string info.Name
                     | len ->
