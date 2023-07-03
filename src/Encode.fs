@@ -111,6 +111,8 @@ module Encode =
     ///
     let inline bool (value : bool) : JsonValue =
         box value
+    [<Emit("$0[$1] = $2")>]
+    let setVal (dict : obj) (key: obj) (value: obj) : unit = nativeOnly
 
     ///**Description**
     /// Encode an object
@@ -124,9 +126,12 @@ module Encode =
     ///**Exceptions**
     ///
     let object (values : (string * JsonValue) seq) : JsonValue =
-        let o = obj()
+        // let o = obj()
+        let o = {||}
         for (key, value) in values do
-            o?(key) <- value
+            // setVal o
+            // o?(key) <- value
+            setVal o key value
         box o
 
     ///**Description**
@@ -427,7 +432,7 @@ module Encode =
                                 target.[targetKey] <- encode value
                             target)
                 fun (source: obj) ->
-                    (JsonValue(), setters) ||> Seq.fold (fun target set -> set source target)
+                    (createObj [], setters) ||> Seq.fold (fun target set -> set source target)
             elif FSharpType.IsUnion(t) then
                 fun (value: obj) ->
                     let info, fields = FSharpValue.GetUnionFields(value, t, allowAccessToPrivateRepresentation=true)
@@ -523,7 +528,7 @@ Documentation available at: https://thoth-org.github.io/Thoth.Json/documentation
                         fun value ->
                             // Fable compiles Guids as strings so this works, but maybe we should make the conversion explicit
                             // (see dotnet version) in case Fable implementation of Guids change
-                            (JsonValue(), value :?> Map<string, obj>)
+                            (createObj [], value :?> Map<string, obj>)
                             ||> Seq.fold (fun target (KeyValue(k,v)) ->
                                 target.[k] <- valueEncoder v
                                 target)
