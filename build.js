@@ -42,7 +42,7 @@ const testHandler = async (argv) => {
         concurrently([
             {
                 // command: "dotnet fable --watch --outDir fableBuild",
-                command: "dotnet fable watch tests --lang py --outDir tests/fableBuild --runWatch python -m pytest tests/fableBuild/",
+                command: "dotnet fable watch tests --lang py --outDir fableBuild --runWatch python -m pytest fableBuild/",
                 //command: "dotnet fable --watch src --outDir fableBuild --run python -m pytest ./tests/fableBuild/main.py",
                 // cwd: "./tests",
                 name: "Fable",
