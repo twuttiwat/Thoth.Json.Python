@@ -5,9 +5,21 @@ open Fable.Core
 #endif
 
 open Fable.Core.JsInterop
+open Fable.Core.PyInterop
 open Thoth.Json
 open Util.Testing
 open System
+
+module Helpers =
+    [<Import("tz", "dateutil")>]
+    let tzMod: obj = nativeOnly
+    let getUtc (): obj = tzMod?UTC
+
+    [<Emit("$0.astimezone($1)")>]
+    let toUniversalTime1 (_: System.DateTime) (_: obj): System.DateTime = nativeOnly
+
+    let toUniversalTime (d: System.DateTime): System.DateTime =
+        toUniversalTime1 d (getUtc())
 
 let jsonRecord =
     """{ "a": 1.0,
@@ -557,53 +569,55 @@ Expecting a bigint but instead got: "maxime"
 
                 equal (Ok expected) actual
 
-            // testCase "a datetime works" <| fun _ ->
-            //     let expected = new DateTime(2018, 10, 1, 11, 12, 55, DateTimeKind.Utc)
+            testCase "a datetime works" <| fun _ ->
+                let expected = new DateTime(2018, 10, 1, 11, 12, 55, DateTimeKind.Utc)
+                let actual =
+                    Decode.fromString Decode.datetimeUtc "\"2018-10-01T11:12:55.00Z\""
+
+                equal (Ok expected) actual
+
+            testCase "a non-UTC datetime works" <| fun _ ->
+                let expected = new DateTime(2018, 10, 1, 11, 12, 55)
+                let actual =
+                    Decode.fromString Decode.datetimeLocal "\"2018-10-01T11:12:55\""
+
+                equal (Ok expected) actual
+
+            testCase "a datetime output an error if invalid string" <| fun _ ->
+                let expected =
+                    Error(
+                        """
+Error at: `$`
+Expecting a datetime but instead got: "invalid_string"
+                        """.Trim())
+
+                let actual =
+                    Decode.fromString Decode.datetimeUtc "\"invalid_string\""
+
+                equal expected actual
+
+            testCase "a datetime works with TimeZone" <| fun _ ->
+                let localDate = DateTime(2018, 10, 1, 11, 12, 55, DateTimeKind.Local)
+
+                let expected = localDate |> Helpers.toUniversalTime |> Ok
+                // let expected = Ok (localDate |> Encode.Helpers.ToUniversalTime())
+                // let expected = Ok localDate
+                let json = sprintf "\"%s\"" (localDate.ToString("O"))
+                printf "json localdate: %s" json
+                let actual =
+                    Decode.fromString Decode.datetimeUtc json
+
+                equal expected actual
+
+            // testCase "a datetimeOffset works" <| fun _ ->
+            //     let expected =
+            //         DateTimeOffset(2018, 7, 2, 12, 23, 45, 0, TimeSpan.FromHours(2.))
+            //         |> Ok
+            //     let json = "\"2018-07-02T12:23:45+02:00\""
             //     let actual =
-            //         Decode.fromString Decode.datetimeUtc "\"2018-10-01T11:12:55.00Z\""
-            //
-            //     equal (Ok expected) actual
+            //         Decode.fromString Decode.datetimeOffset json
+            //     equal expected actual
 
-//             testCase "a non-UTC datetime works" <| fun _ ->
-//                 let expected = new DateTime(2018, 10, 1, 11, 12, 55)
-//                 let actual =
-//                     Decode.fromString Decode.datetimeLocal "\"2018-10-01T11:12:55\""
-//
-//                 equal (Ok expected) actual
-//
-//             testCase "a datetime output an error if invalid string" <| fun _ ->
-//                 let expected =
-//                     Error(
-//                         """
-// Error at: `$`
-// Expecting a datetime but instead got: "invalid_string"
-//                         """.Trim())
-//
-//                 let actual =
-//                     Decode.fromString Decode.datetimeUtc "\"invalid_string\""
-//
-//                 equal expected actual
-
-//             testCase "a datetime works with TimeZone" <| fun _ ->
-//                 let localDate = DateTime(2018, 10, 1, 11, 12, 55, DateTimeKind.Local)
-//
-//                 // let expected = Ok (localDate.ToUniversalTime())
-//                 let expected = Ok localDate
-//                 let json = sprintf "\"%s\"" (localDate.ToString("O"))
-//                 let actual =
-//                     Decode.fromString Decode.datetimeUtc json
-//
-//                 equal expected actual
-//
-//             testCase "a datetimeOffset works" <| fun _ ->
-//                 let expected =
-//                     DateTimeOffset(2018, 7, 2, 12, 23, 45, 0, TimeSpan.FromHours(2.))
-//                     |> Ok
-//                 let json = "\"2018-07-02T12:23:45+02:00\""
-//                 let actual =
-//                     Decode.fromString Decode.datetimeOffset json
-//                 equal expected actual
-//
 //             testCase "a datetimeOffset returns Error if invalid format" <| fun _ ->
 //                 let expected =
 //                     Error(

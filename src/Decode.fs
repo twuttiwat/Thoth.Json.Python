@@ -20,6 +20,15 @@ module Decode =
         [<ImportAll("inspect")>]
         let inspectMod: obj = nativeOnly
 
+        // [<ImportAll("dateutil")>]
+        // let dateutilMod: obj = nativeOnly
+
+        [<Import("parser", "dateutil")>]
+        let dateParserMod: obj = nativeOnly
+
+        // ImportSideEffects("tz", "dateutil")
+        [<Import("tz", "dateutil")>]
+        let tzMod: obj = nativeOnly
 
         [<Emit("str(type($0))")>]
         let jsTypeof (_ : JsonValue) : string = nativeOnly
@@ -76,8 +85,25 @@ module Decode =
         let inline asString (o: JsonValue): string = unbox o
         let inline asArray (o: JsonValue): JsonValue[] = unbox o
 
+        let parseDateTime (s: string): System.DateTime = dateParserMod?parse(s)
+
+        let tryParseDateTime (s: string) =
+            try
+                s |> parseDateTime |> Some
+            with ex ->
+                None
+
+
+        let getUtc (): obj = tzMod?UTC
+
+        [<Emit("$0.astimezone($1)")>]
+        let toUniversalTime1 (_: System.DateTime) (_: obj): System.DateTime = nativeOnly
+
+        let rec toUniversalTime (d: System.DateTime): System.DateTime =
+            toUniversalTime1 d (getUtc())
+
         [<Emit("$0.replace(tzinfo=None)")>]
-        let toUniversalTime (_: System.DateTime): System.DateTime = nativeOnly
+        let rec toUniversalTime2 (d: System.DateTime): System.DateTime = nativeOnly
 
     let private genericMsg msg value newLine =
         try
@@ -375,9 +401,15 @@ module Decode =
     let datetimeUtc : Decoder<System.DateTime> =
         fun path value ->
             if Helpers.isString value then
-                match System.DateTime.TryParse (Helpers.asString value) with
-                | true, x -> x |> Helpers.toUniversalTime |> Ok
-                | _ -> (path, BadPrimitive("a datetime", value)) |> Error
+                 match Helpers.tryParseDateTime (Helpers.asString value) with
+                 | Some x ->
+                    // printfn "datetimeUtc before toUniversalTime %O" x
+                    x |> Helpers.toUniversalTime |> Ok
+                    // x |> Helpers.toUniversalTime2 |> Ok
+                 | _ -> (path, BadPrimitive("a datetime", value)) |> Error
+                // match System.DateTime.TryParse (Helpers.asString value) with
+                // | true, x -> x |> Helpers.toUniversalTime |> Ok
+                // | _ -> (path, BadPrimitive("a datetime", value)) |> Error
             else
                 (path, BadPrimitive("a datetime", value)) |> Error
 
@@ -385,9 +417,12 @@ module Decode =
     let datetimeLocal : Decoder<System.DateTime> =
         fun path value ->
             if Helpers.isString value then
-                match System.DateTime.TryParse (Helpers.asString value) with
-                | true, x -> x |> Ok
+                match Helpers.tryParseDateTime (Helpers.asString value) with
+                | Some x -> x |> Ok
                 | _ -> (path, BadPrimitive("a datetime", value)) |> Error
+                // match System.DateTime.TryParse (Helpers.asString value) with
+                // | true, x -> x |> Ok
+                // | _ -> (path, BadPrimitive("a datetime", value)) |> Error
             else
                 (path, BadPrimitive("a datetime", value)) |> Error
 
