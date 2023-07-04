@@ -390,15 +390,15 @@ module Decode =
             else
                 (path, BadPrimitive("a decimal", value)) |> Error
 
-    [<System.Obsolete("Please use datetimeUtc instead.")>]
-    let datetime : Decoder<System.DateTime> =
-        fun path value ->
-            if Helpers.isString value then
-                match System.DateTime.TryParse (Helpers.asString value) with
-                | true, x -> x |> Helpers.toUniversalTime |> Ok
-                | _ -> (path, BadPrimitive("a datetime", value)) |> Error
-            else
-                (path, BadPrimitive("a datetime", value)) |> Error
+    // [<System.Obsolete("Please use datetimeUtc instead.")>]
+    // let datetime : Decoder<System.DateTime> =
+    //     fun path value ->
+    //         if Helpers.isString value then
+    //             match System.DateTime.TryParse (Helpers.asString value) with
+    //             | true, x -> x |> Helpers.toUniversalTime |> Ok
+    //             | _ -> (path, BadPrimitive("a datetime", value)) |> Error
+    //         else
+    //             (path, BadPrimitive("a datetime", value)) |> Error
 
     /// Decode a System.DateTime value using Sytem.DateTime.TryParse, then convert it to UTC.
     let datetimeUtc : Decoder<System.DateTime> =
@@ -1222,7 +1222,7 @@ module Decode =
 
     let rec private makeUnion extra caseStrategy t name (path : string) (values: JsonValue[]) =
         let uci =
-            FSharpType.GetUnionCases(t, allowAccessToPrivateRepresentation=true)
+            FSharpType.GetUnionCases(t)
             |> Array.tryFind (fun x -> x.Name = name)
         match uci with
         | None -> (path, FailMessage("Cannot find case " + name + " in " + t.FullName)) |> Error
@@ -1232,7 +1232,7 @@ module Decode =
                 if decoders.Length = 0 && values.Length <= 1 // First item is the case name
                 then Ok []
                 else mixedArray 1 decoders path values
-            values |> Result.map (fun values -> FSharpValue.MakeUnion(uci, List.toArray values, allowAccessToPrivateRepresentation=true))
+            values |> Result.map (fun values -> FSharpValue.MakeUnion(uci, List.toArray values))
 
     and private autoDecodeRecordsAndUnions extra (caseStrategy : CaseStrategy) (isOptional : bool) (t: System.Type) : BoxedDecoder =
         // Add the decoder to extra in case one of the fields is recursive

@@ -840,34 +840,30 @@ Expecting a float but instead got: false
 
                 equal expected actual
 
-//             testCase "tuple4 returns an error if invalid json (missing index)" <| fun _ ->
-//                 let json = """[1, "maxime", 2.5]"""
-//                 let expected =
-//                     Error(
-//                         """
-// Error at: `$.[3]`
-// Expecting a longer array. Need index `3` but there are only `3` entries.
-// [
-//     1,
-//     "maxime",
-//     2.5
-// ]
-//                         """.Trim())
-//
-//                 let actual =
-//                     Decode.fromString
-//                         (Decode.tuple4
-//                             Decode.int
-//                             Decode.string
-//                             Decode.float
-//                             SmallRecord.Decoder) json
-//
-//                 match actual with
-//                 | Error msg ->
-//                     printfn "tuple4 error %s" msg
-//                 | Ok _ -> printfn "Okay"
-//
-//                 equal expected actual
+            testCase "tuple4 returns an error if invalid json (missing index)" <| fun _ ->
+                let json = """[1, "maxime", 2.5]"""
+                let expected =
+                    Error(
+                        """
+Error at: `$.[3]`
+Expecting a longer array. Need index `3` but there are only `3` entries.
+[1, "maxime", 2.5]
+                        """.Trim())
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple4
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder) json
+
+                match actual with
+                | Error msg ->
+                    printfn "tuple4 error %s" msg
+                | Ok _ -> printfn "Okay"
+
+                equal expected actual
 
             testCase "tuple4 returns an error if invalid json (error in the nested object)" <| fun _ ->
                 let json = """[1, "maxime", 2.5, { "fieldA" : false }]"""
@@ -908,72 +904,72 @@ Expecting a datetime but instead got: false
 
                 equal expected actual
 
-//             testCase "tuple6 returns an error if invalid json" <| fun _ ->
-//                 let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, "2018-10-01T11:12:55.00Z", false]"""
-//                 let expected =
-//                     Error(
-//                         """
-// Error at: `$.[5]`
-// Expecting null but instead got: false
-//                         """.Trim())
-//
-//                 let actual =
-//                     Decode.fromString
-//                         (Decode.tuple6
-//                             Decode.int
-//                             Decode.string
-//                             Decode.float
-//                             SmallRecord.Decoder
-//                             Decode.datetimeUtc
-//                             (Decode.nil null)) json
-//
-//                 equal expected actual
+            testCase "tuple6 returns an error if invalid json" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, "2018-10-01T11:12:55.00Z", false]"""
+                let expected =
+                    Error(
+                        """
+Error at: `$.[5]`
+Expecting null but instead got: false
+                        """.Trim())
 
-//             testCase "tuple7 returns an error if invalid json" <| fun _ ->
-//                 let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, "2018-10-01T11:12:55.00Z", null, false]"""
-//                 let expected =
-//                     Error(
-//                         """
-// Error at: `$.[6]`
-// Expecting an int but instead got: false
-//                         """.Trim())
-//
-//                 let actual =
-//                     Decode.fromString
-//                         (Decode.tuple7
-//                             Decode.int
-//                             Decode.string
-//                             Decode.float
-//                             SmallRecord.Decoder
-//                             Decode.datetimeUtc
-//                             (Decode.nil null)
-//                             Decode.int) json
-//
-//                 equal expected actual
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple6
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder
+                            Decode.datetimeUtc
+                            (Decode.nil null)) json
 
-//             testCase "tuple8 returns an error if invalid json" <| fun _ ->
-//                 let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, "2018-10-01T11:12:55.00Z", null, 56, "maxime"]"""
-//                 let expected =
-//                     Error(
-//                         """
-// Error at: `$.[7]`
-// Expecting an int but instead got: "maxime"
-//                         """.Trim())
-//
-//                 let actual =
-//                     Decode.fromString
-//                         (Decode.tuple8
-//                             Decode.int
-//                             Decode.string
-//                             Decode.float
-//                             SmallRecord.Decoder
-//                             Decode.datetimeUtc
-//                             (Decode.nil null)
-//                             Decode.int
-//                             Decode.int) json
-//
-//                 equal expected actual
-//
+                equal expected actual
+
+            testCase "tuple7 returns an error if invalid json" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, "2018-10-01T11:12:55.00Z", null, false]"""
+                let expected =
+                    Error(
+                        """
+Error at: `$.[6]`
+Expecting an int but instead got: false
+                        """.Trim())
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple7
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder
+                            Decode.datetimeUtc
+                            (Decode.nil null)
+                            Decode.int) json
+
+                equal expected actual
+
+            testCase "tuple8 returns an error if invalid json" <| fun _ ->
+                let json = """[1, "maxime", 2.5, { "fieldA" : "test" }, "2018-10-01T11:12:55.00Z", null, 56, "maxime"]"""
+                let expected =
+                    Error(
+                        """
+Error at: `$.[7]`
+Expecting an int but instead got: "maxime"
+                        """.Trim())
+
+                let actual =
+                    Decode.fromString
+                        (Decode.tuple8
+                            Decode.int
+                            Decode.string
+                            Decode.float
+                            SmallRecord.Decoder
+                            Decode.datetimeUtc
+                            (Decode.nil null)
+                            Decode.int
+                            Decode.int) json
+
+                equal expected actual
+
         ]
 
         testList "Object primitive" [
@@ -987,20 +983,20 @@ Expecting a datetime but instead got: false
 
                 equal expected actual
 
-//             testCase "field output an error explaining why the value is considered invalid" <| fun _ ->
-//                 let json = """{ "name": null, "age": 25 }"""
-//                 let expected =
-//                     Error(
-//                         """
-// Error at: `$.name`
-// Expecting an int but instead got: null
-//                         """.Trim()
-//                     )
-//
-//                 let actual =
-//                     Decode.fromString (Decode.field "name" Decode.int) json
-//
-//                 equal expected actual
+            testCase "field output an error explaining why the value is considered invalid" <| fun _ ->
+                let json = """{ "name": null, "age": 25 }"""
+                let expected =
+                    Error(
+                        """
+Error at: `$.name`
+Expecting an int but instead got: null
+                        """.Trim()
+                    )
+
+                let actual =
+                    Decode.fromString (Decode.field "name" Decode.int) json
+
+                equal expected actual
 
 //             testCase "field output an error when field is missing" <| fun _ ->
 //                 let json = """{ "name": "maxime", "age": 25 }"""
@@ -1050,7 +1046,7 @@ Expecting a datetime but instead got: false
 //                     Decode.fromString (Decode.at ["user"; "firstname"] Decode.string) json
 //
 //                 equal expected actual
-
+//
 //             testCase "at output an error explaining why the value is considered invalid" <| fun _ ->
 //                 let json = """{ "name": null, "age": 25 }"""
 //                 let expected =
@@ -1064,7 +1060,7 @@ Expecting a datetime but instead got: false
 //                 let actual =
 //                     Decode.fromString (Decode.at [ "name" ] Decode.int) json
 //
-//                 equal expected actual
+                // equal expected actual
 
             testCase "index works" <| fun _ ->
                 let json = """["maxime", "alfonso", "steffen"]"""
@@ -1075,24 +1071,20 @@ Expecting a datetime but instead got: false
 
                 equal expected actual
 
-//             testCase "index output an error if array is too small" <| fun _ ->
-//                 let json = """["maxime", "alfonso", "steffen"]"""
-//                 let expected =
-//                     Error(
-//                         """
-// Error at: `$.[5]`
-// Expecting a longer array. Need index `5` but there are only `3` entries.
-// [
-//     "maxime",
-//     "alfonso",
-//     "steffen"
-// ]
-//                         """.Trim())
-//
-//                 let actual =
-//                     Decode.fromString (Decode.index 5 Decode.string) json
-//
-//                 equal expected actual
+            testCase "index output an error if array is too small" <| fun _ ->
+                let json = """["maxime", "alfonso", "steffen"]"""
+                let expected =
+                    Error(
+                        """
+Error at: `$.[5]`
+Expecting a longer array. Need index `5` but there are only `3` entries.
+["maxime", "alfonso", "steffen"]
+                        """.Trim())
+
+                let actual =
+                    Decode.fromString (Decode.index 5 Decode.string) json
+
+                equal expected actual
 
             testCase "index output an error if value isn't an array" <| fun _ ->
                 let json = "1"
@@ -3111,32 +3103,32 @@ Documentation available at: https://thoth-org.github.io/Thoth.Json/documentation
             //     let actual = Decode.Auto.fromString json
             //     equal (Ok expected) actual
 
-            // testCase "Decoder.Auto.toString works with bigint extra" <| fun _ ->
-            //     let extra = Extra.empty |> Extra.withBigInt
-            //     let expected = { bigintField = 9999999999999999999999I }
-            //     let actual = Decode.Auto.fromString("""{"bigintField":"9999999999999999999999"}""", extra=extra)
-            //     equal (Ok expected) actual
+            testCase "Decoder.Auto.toString works with bigint extra" <| fun _ ->
+                let extra = Extra.empty |> Extra.withBigInt
+                let expected = { bigintField = 9999999999999999999999I }
+                let actual = Decode.Auto.fromString("""{"bigintField":"9999999999999999999999"}""", extra=extra)
+                equal (Ok expected) actual
 
-            // testCase "Decoder.Auto.toString works with custom extra" <| fun _ ->
-            //     let extra = Extra.empty |> Extra.withCustom ChildType.Encode ChildType.Decoder
-            //     let expected = { ParentField = { ChildField = "bumbabon" } }
-            //     let actual = Decode.Auto.fromString("""{"ParentField":"bumbabon"}""", extra=extra)
-            //     equal (Ok expected) actual
+            testCase "Decoder.Auto.toString works with custom extra" <| fun _ ->
+                let extra = Extra.empty |> Extra.withCustom ChildType.Encode ChildType.Decoder
+                let expected = { ParentField = { ChildField = "bumbabon" } }
+                let actual = Decode.Auto.fromString("""{"ParentField":"bumbabon"}""", extra=extra)
+                equal (Ok expected) actual
 
-            // testCase "Auto.fromString works with records with private constructors" <| fun _ ->
-            //     let json = """{ "foo1": 5, "foo2": 7.8 }"""
-            //     Decode.Auto.fromString(json, caseStrategy=CamelCase)
-            //     |> equal (Ok ({ Foo1 = 5; Foo2 = 7.8 }: RecordWithPrivateConstructor))
+            testCase "Auto.fromString works with records with private constructors" <| fun _ ->
+                let json = """{ "foo1": 5, "foo2": 7.8 }"""
+                Decode.Auto.fromString(json, caseStrategy=CamelCase)
+                |> equal (Ok ({ Foo1 = 5; Foo2 = 7.8 }: RecordWithPrivateConstructor))
 
-            // testCase "Auto.fromString works with unions with private constructors" <| fun _ ->
-            //     let json = """[ "Baz", ["Bar", "foo"]]"""
-            //     Decode.Auto.fromString<UnionWithPrivateConstructor list>(json, caseStrategy=CamelCase)
-            //     |> equal (Ok [Baz; Bar "foo"])
+            testCase "Auto.fromString works with unions with private constructors" <| fun _ ->
+                let json = """[ "Baz", ["Bar", "foo"]]"""
+                Decode.Auto.fromString<UnionWithPrivateConstructor list>(json, caseStrategy=CamelCase)
+                |> equal (Ok [Baz; Bar "foo"])
 
-            // testCase "Auto.fromString works gives proper error for wrong union fields" <| fun _ ->
-            //     let json = """["Multi", "bar", "foo", "zas"]"""
-            //     Decode.Auto.fromString<UnionWithMultipleFields>(json, caseStrategy=CamelCase)
-            //     |> equal (Error "Error at: `$[2]`\nExpecting an int but instead got: \"foo\"")
+            testCase "Auto.fromString works gives proper error for wrong union fields" <| fun _ ->
+                let json = """["Multi", "bar", "foo", "zas"]"""
+                Decode.Auto.fromString<UnionWithMultipleFields>(json, caseStrategy=CamelCase)
+                |> equal (Error "Error at: `$[2]`\nExpecting an int but instead got: \"foo\"")
 
             // TODO: Should we allow shorter arrays when last fields are options?
             // testCase "Auto.fromString works gives proper error for wrong array length" <| fun _ ->
@@ -3170,14 +3162,14 @@ Documentation available at: https://thoth-org.github.io/Thoth.Json/documentation
             //     Decode.Auto.fromString<RecordWithStrangeType>(json)
             //     |> equal (Ok { Id = 0; Thread = None })
 
-            // testCase "Auto.fromString works with recursive types" <| fun _ ->
-            //     let vater =
-            //         { Name = "Alfonso"
-            //           Children = [ { Name = "Narumi"; Children = [] }
-            //                        { Name = "Takumi"; Children = [] } ] }
-            //     let json = """{"Name":"Alfonso","Children":[{"Name":"Narumi","Children":[]},{"Name":"Takumi","Children":[]}]}"""
-            //     Decode.Auto.fromString<MyRecType>(json)
-            //     |> equal (Ok vater)
+            testCase "Auto.fromString works with recursive types" <| fun _ ->
+                let vater =
+                    { Name = "Alfonso"
+                      Children = [ { Name = "Narumi"; Children = [] }
+                                   { Name = "Takumi"; Children = [] } ] }
+                let json = """{"Name":"Alfonso","Children":[{"Name":"Narumi","Children":[]},{"Name":"Takumi","Children":[]}]}"""
+                Decode.Auto.fromString<MyRecType>(json)
+                |> equal (Ok vater)
 
             testCase "Auto.unsafeFromString works for unit" <| fun _ ->
                 let json = Encode.unit () |> Encode.toString 4
@@ -3190,22 +3182,22 @@ Documentation available at: https://thoth-org.github.io/Thoth.Json/documentation
             //     let actual = Decode.Auto.unsafeFromString<NoAllocAttributeId>(json)
             //     equal expected actual
 
-            // testCase "Auto.unsafeFromString works with HTML inside of a string" <| fun _ ->
-            //     let expected =
-            //         {
-            //             FeedName = "Ars"
-            //             Content = "<div><figure class=\"intro-image intro-left\"><img src=\"https://cdn.arstechnica.net/wp-content/uploads/2019/05/qualcomm-enforcer-800x450.jpg\" alt=\"How Qualcomm shook down the cell phone industry for almost 20 years\"><p class=\"caption\" style=\"font-size: 0.8em\"><a href=\"https://cdn.arstechnica.net/wp-content/uploads/2019/05/qualcomm-enforcer.jpg\" class=\"enlarge-link\">Enlarge</a> (credit: Getty / Aurich Lawson)</p>  </figure><div><a name=\"page-1\"></a></div><p>In 2005, Apple contacted Qualcomm as a potential supplier for modem chips in the first iPhone. Qualcomm's response was unusual: a letter demanding that Apple sign a patent licensing agreement before Qualcomm would even consider supplying chips.</p><p>\"I'd spent 20 years in the industry, I had never seen a letter like this,\" said Tony Blevins, Apple's vice president of procurement.</p><p>Most suppliers are eager to talk to new customers—especially customers as big and prestigious as Apple. But Qualcomm wasn't like other suppliers; it enjoyed a dominant position in the market for cellular chips. That gave Qualcomm a lot of leverage, and the company wasn't afraid to use it.</p></div><p><a href=\"https://arstechnica.com/?p=1510419#p3\">Read 70 remaining paragraphs</a> | <a href=\"https://arstechnica.com/?p=1510419&amp;comments=1\">Comments</a></p><div class=\"feedflare\"><a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?i=7NLlD3YvqFA:DF_-B3_cDwc:V_sGLiPBpWU\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?i=7NLlD3YvqFA:DF_-B3_cDwc:F7zBnMyn0Lo\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:qj6IDK7rITs\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?d=qj6IDK7rITs\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?d=yIl2AUoC8zA\" border=\"0\"></a></div>"
-            //         }
-            //
-            //     let articleJson =
-            //         """
-            //     {
-            //       "FeedName": "Ars",
-            //       "Content": "<div><figure class=\"intro-image intro-left\"><img src=\"https://cdn.arstechnica.net/wp-content/uploads/2019/05/qualcomm-enforcer-800x450.jpg\" alt=\"How Qualcomm shook down the cell phone industry for almost 20 years\"><p class=\"caption\" style=\"font-size: 0.8em\"><a href=\"https://cdn.arstechnica.net/wp-content/uploads/2019/05/qualcomm-enforcer.jpg\" class=\"enlarge-link\">Enlarge</a> (credit: Getty / Aurich Lawson)</p>  </figure><div><a name=\"page-1\"></a></div><p>In 2005, Apple contacted Qualcomm as a potential supplier for modem chips in the first iPhone. Qualcomm's response was unusual: a letter demanding that Apple sign a patent licensing agreement before Qualcomm would even consider supplying chips.</p><p>\"I'd spent 20 years in the industry, I had never seen a letter like this,\" said Tony Blevins, Apple's vice president of procurement.</p><p>Most suppliers are eager to talk to new customers—especially customers as big and prestigious as Apple. But Qualcomm wasn't like other suppliers; it enjoyed a dominant position in the market for cellular chips. That gave Qualcomm a lot of leverage, and the company wasn't afraid to use it.</p></div><p><a href=\"https://arstechnica.com/?p=1510419#p3\">Read 70 remaining paragraphs</a> | <a href=\"https://arstechnica.com/?p=1510419&amp;comments=1\">Comments</a></p><div class=\"feedflare\"><a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?i=7NLlD3YvqFA:DF_-B3_cDwc:V_sGLiPBpWU\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?i=7NLlD3YvqFA:DF_-B3_cDwc:F7zBnMyn0Lo\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:qj6IDK7rITs\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?d=qj6IDK7rITs\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?d=yIl2AUoC8zA\" border=\"0\"></a></div>"
-            //     }
-            //         """
-            //
-            //     let actual : TestStringWithHTML = Decode.Auto.unsafeFromString(articleJson)
-            //     equal expected actual
+            testCase "Auto.unsafeFromString works with HTML inside of a string" <| fun _ ->
+                let expected =
+                    {
+                        FeedName = "Ars"
+                        Content = "<div><figure class=\"intro-image intro-left\"><img src=\"https://cdn.arstechnica.net/wp-content/uploads/2019/05/qualcomm-enforcer-800x450.jpg\" alt=\"How Qualcomm shook down the cell phone industry for almost 20 years\"><p class=\"caption\" style=\"font-size: 0.8em\"><a href=\"https://cdn.arstechnica.net/wp-content/uploads/2019/05/qualcomm-enforcer.jpg\" class=\"enlarge-link\">Enlarge</a> (credit: Getty / Aurich Lawson)</p>  </figure><div><a name=\"page-1\"></a></div><p>In 2005, Apple contacted Qualcomm as a potential supplier for modem chips in the first iPhone. Qualcomm's response was unusual: a letter demanding that Apple sign a patent licensing agreement before Qualcomm would even consider supplying chips.</p><p>\"I'd spent 20 years in the industry, I had never seen a letter like this,\" said Tony Blevins, Apple's vice president of procurement.</p><p>Most suppliers are eager to talk to new customers—especially customers as big and prestigious as Apple. But Qualcomm wasn't like other suppliers; it enjoyed a dominant position in the market for cellular chips. That gave Qualcomm a lot of leverage, and the company wasn't afraid to use it.</p></div><p><a href=\"https://arstechnica.com/?p=1510419#p3\">Read 70 remaining paragraphs</a> | <a href=\"https://arstechnica.com/?p=1510419&amp;comments=1\">Comments</a></p><div class=\"feedflare\"><a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?i=7NLlD3YvqFA:DF_-B3_cDwc:V_sGLiPBpWU\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?i=7NLlD3YvqFA:DF_-B3_cDwc:F7zBnMyn0Lo\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:qj6IDK7rITs\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?d=qj6IDK7rITs\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?d=yIl2AUoC8zA\" border=\"0\"></a></div>"
+                    }
+
+                let articleJson =
+                    """
+                {
+                  "FeedName": "Ars",
+                  "Content": "<div><figure class=\"intro-image intro-left\"><img src=\"https://cdn.arstechnica.net/wp-content/uploads/2019/05/qualcomm-enforcer-800x450.jpg\" alt=\"How Qualcomm shook down the cell phone industry for almost 20 years\"><p class=\"caption\" style=\"font-size: 0.8em\"><a href=\"https://cdn.arstechnica.net/wp-content/uploads/2019/05/qualcomm-enforcer.jpg\" class=\"enlarge-link\">Enlarge</a> (credit: Getty / Aurich Lawson)</p>  </figure><div><a name=\"page-1\"></a></div><p>In 2005, Apple contacted Qualcomm as a potential supplier for modem chips in the first iPhone. Qualcomm's response was unusual: a letter demanding that Apple sign a patent licensing agreement before Qualcomm would even consider supplying chips.</p><p>\"I'd spent 20 years in the industry, I had never seen a letter like this,\" said Tony Blevins, Apple's vice president of procurement.</p><p>Most suppliers are eager to talk to new customers—especially customers as big and prestigious as Apple. But Qualcomm wasn't like other suppliers; it enjoyed a dominant position in the market for cellular chips. That gave Qualcomm a lot of leverage, and the company wasn't afraid to use it.</p></div><p><a href=\"https://arstechnica.com/?p=1510419#p3\">Read 70 remaining paragraphs</a> | <a href=\"https://arstechnica.com/?p=1510419&amp;comments=1\">Comments</a></p><div class=\"feedflare\"><a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:V_sGLiPBpWU\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?i=7NLlD3YvqFA:DF_-B3_cDwc:V_sGLiPBpWU\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:F7zBnMyn0Lo\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?i=7NLlD3YvqFA:DF_-B3_cDwc:F7zBnMyn0Lo\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:qj6IDK7rITs\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?d=qj6IDK7rITs\" border=\"0\"></a> <a href=\"http://feeds.arstechnica.com/~ff/arstechnica/index?a=7NLlD3YvqFA:DF_-B3_cDwc:yIl2AUoC8zA\"><img src=\"http://feeds.feedburner.com/~ff/arstechnica/index?d=yIl2AUoC8zA\" border=\"0\"></a></div>"
+                }
+                    """
+
+                let actual : TestStringWithHTML = Decode.Auto.unsafeFromString(articleJson)
+                equal expected actual
         ]
     ]
