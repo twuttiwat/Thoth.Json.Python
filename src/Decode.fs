@@ -1207,13 +1207,13 @@ module Decode =
         let decoder =
             if FSharpType.IsRecord(t) then
                 let decoders =
-                    FSharpType.GetRecordFields(t, allowAccessToPrivateRepresentation=true)
+                    FSharpType.GetRecordFields(t)
                     |> Array.map (fun fi ->
                         let name = Util.Casing.convert caseStrategy fi.Name
                         name, autoDecoder extra caseStrategy false fi.PropertyType)
                 fun path value ->
                     autoObject decoders path value
-                    |> Result.map (fun xs -> FSharpValue.MakeRecord(t, List.toArray xs, allowAccessToPrivateRepresentation=true))
+                    |> Result.map (fun xs -> FSharpValue.MakeRecord(t, List.toArray xs))
 
             elif FSharpType.IsUnion(t) then
                 fun path (value: JsonValue) ->
