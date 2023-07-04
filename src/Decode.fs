@@ -69,6 +69,9 @@ module Decode =
         [<Emit("$0 is None")>]
         let isUndefined (_: JsonValue): bool = nativeOnly
 
+        [<Emit("type($0) is dict and $1 not in $0")>]
+        let isFieldUndefined (_: JsonValue) (_: JsonValue): bool = nativeOnly
+
         // let anyToString (o: JsonValue) : string = jsonMod?dumps(o)
         let anyToString (o: JsonValue) : string = json.dumps(o)
 
@@ -501,7 +504,8 @@ module Decode =
         fun path value ->
             if Helpers.isObject value then
                 let fieldValue = Helpers.getField fieldName value
-                if Helpers.isUndefined fieldValue then
+                // if Helpers.isUndefined fieldValue then
+                if Helpers.isFieldUndefined value fieldName then
                     Error(path, BadField ("an object with a field named `" + fieldName + "`", value))
                 else
                     decoder (path + "." + fieldName) fieldValue
