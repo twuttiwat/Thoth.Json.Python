@@ -73,7 +73,7 @@ module Decode =
         let isFieldUndefined (_: JsonValue) (_: JsonValue): bool = nativeOnly
 
         // let anyToString (o: JsonValue) : string = jsonMod?dumps(o)
-        let anyToString (o: JsonValue) : string = json.dumps(o)
+        let anyToString (o: JsonValue) : string = json2.dumps(o, Some 4)
 
         [<Emit("type($0) is function")>]
         let inline isFunction (_: JsonValue) : bool = nativeOnly
@@ -523,12 +523,13 @@ module Decode =
                         let res = badPathError fieldNames (Some curPath) firstValue
                         curPath, curValue, Some res
                     elif Helpers.isObject curValue then
-                        let curValue = Helpers.getField field curValue
-                        if Helpers.isUndefined curValue then
+                        let curValue1 = Helpers.getField field curValue
+                        if Helpers.isFieldUndefined curValue field then
+                        // if Helpers.isUndefined curValue then
                             let res = badPathError fieldNames None firstValue
-                            curPath, curValue, Some res
+                            curPath, curValue1, Some res
                         else
-                            curPath + "." + field, curValue, None
+                            curPath + "." + field, curValue1, None
                     else
                         let res = Error(curPath, BadType("an object", curValue))
                         curPath, curValue, Some res)
