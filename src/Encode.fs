@@ -569,14 +569,14 @@ Documentation available at: https://thoth-org.github.io/Thoth.Json/documentation
             // These number types require extra libraries in Fable. To prevent penalizing
             // all users, extra encoders (withInt64, etc) must be passed when they're needed.
 
-            // elif fullname = typeof<int64>.FullName then
-            //     boxEncoder int64
-            // elif fullname = typeof<uint64>.FullName then
-            //     boxEncoder uint64
-            // elif fullname = typeof<bigint>.FullName then
-            //     boxEncoder bigint
-            // elif fullname = typeof<decimal>.FullName then
-            //     boxEncoder decimal
+            elif fullname = typeof<int64>.FullName then
+                boxEncoder int64
+            elif fullname = typeof<uint64>.FullName then
+                boxEncoder uint64
+            elif fullname = typeof<bigint>.FullName then
+                boxEncoder bigint
+            elif fullname = typeof<decimal>.FullName then
+                boxEncoder decimal
             elif fullname = typeof<System.DateTime>.FullName then
                 boxEncoder datetime
             elif fullname = typeof<System.DateTimeOffset>.FullName then

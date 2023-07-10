@@ -2683,12 +2683,12 @@ Expecting a boolean but instead got: "not_a_boolean"
                 let res = Decode.Auto.unsafeFromString<uint32>(json)
                 equal value res
 
-            // testCase "Auto decoders works for uint64" <| fun _ ->
-            //     let extra = Extra.empty |> Extra.withUInt64
-            //     let value = 9999999999999999999UL
-            //     let json = Encode.Auto.toString(4, value, extra=extra)
-            //     let res = Decode.Auto.unsafeFromString<uint64>(json, extra=extra)
-            //     equal value res
+            testCase "Auto decoders works for uint64" <| fun _ ->
+                let extra = Extra.empty |> Extra.withUInt64
+                let value = 9999999999999999999UL
+                let json = Encode.Auto.toString(4, value, extra=extra)
+                let res = Decode.Auto.unsafeFromString<uint64>(json, extra=extra)
+                equal value res
 
             testCase "Auto decoders works for bigint" <| fun _ ->
                 let extra = Extra.empty |> Extra.withBigInt
@@ -3113,11 +3113,11 @@ Documentation available at: https://thoth-org.github.io/Thoth.Json/documentation
                 let actual = Decode.Auto.fromString json
                 equal (Ok expected) actual
 
-            // testCase "Decoder.Auto.toString works with bigint extra" <| fun _ ->
-            //     let extra = Extra.empty |> Extra.withBigInt
-            //     let expected = { bigintField = 9999999999999999999999I }
-            //     let actual = Decode.Auto.fromString("""{"bigintField":"9999999999999999999999"}""", extra=extra)
-            //     equal (Ok expected) actual
+            testCase "Decoder.Auto.toString works with bigint extra" <| fun _ ->
+                let extra = Extra.empty |> Extra.withBigInt
+                let expected = { bigintField = 9999999999999999999999I }
+                let actual = Decode.Auto.fromString("""{"bigint_field":"9999999999999999999999"}""", extra=extra)
+                equal (Ok expected) actual
 
             testCase "Decoder.Auto.toString works with custom extra" <| fun _ ->
                 let extra = Extra.empty |> Extra.withCustom ChildType.Encode ChildType.Decoder
