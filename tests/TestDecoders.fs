@@ -3008,25 +3008,25 @@ Reason: Unkown value provided for the enum
                 let res = Decode.Auto.unsafeFromString<_>(json)
                 equal value res
 
-            // testCase "Auto.unsafeFromString works with camelCase" <| fun _ ->
-            //     let json = """{ "id" : 0, "name": "maxime", "email": "mail@domain.com", "followers": 0 }"""
-            //     let user = Decode.Auto.unsafeFromString<User>(json, caseStrategy=CamelCase)
-            //     equal "maxime" user.Name
-            //     equal 0 user.Id
-            //     equal 0 user.Followers
-            //     equal "mail@domain.com" user.Email
+            testCase "Auto.unsafeFromString works with camelCase" <| fun _ ->
+                let json = """{ "id" : 0, "name": "maxime", "email": "mail@domain.com", "followers": 0 }"""
+                let user = Decode.Auto.unsafeFromString<User>(json, caseStrategy=CamelCase)
+                equal "maxime" user.Name
+                equal 0 user.Id
+                equal 0 user.Followers
+                equal "mail@domain.com" user.Email
 
             testCase "Auto.fromString works with snake_case" <| fun _ ->
-                let json = """{ "one" : 1, "two_part": 2, "three_part_field": 3 }"""
+                let json = """{ "one" : 0, "two_part": 2, "three_part_field": 3 }"""
                 let decoded = Decode.Auto.fromString<RecordForCharacterCase>(json, caseStrategy=SnakeCase)
-                let expected = Ok { One = 1; TwoPart = 2; ThreePartField = 3 }
+                let expected = Ok { One = 0; TwoPart = 2; ThreePartField = 3 }
                 equal expected decoded
 
-            // testCase "Auto.fromString works with camelCase" <| fun _ ->
-            //     let json = """{ "id" : 0, "name": "maxime", "email": "mail@domain.com", "followers": 0 }"""
-            //     let user = Decode.Auto.fromString<User>(json, caseStrategy=CamelCase)
-            //     let expected = Ok { Id = 0; Name = "maxime"; Email = "mail@domain.com"; Followers = 0 }
-            //     equal expected user
+            testCase "Auto.fromString works with camelCase" <| fun _ ->
+                let json = """{ "id" : 0, "name": "maxime", "email": "mail@domain.com", "followers": 0 }"""
+                let user = Decode.Auto.fromString<User>(json, caseStrategy=CamelCase)
+                let expected = Ok { Id = 0; Name = "maxime"; Email = "mail@domain.com"; Followers = 0 }
+                equal expected user
 
             testCase "Auto.fromString works for records with an actual value for the optional field value" <| fun _ ->
                 let json = """{ "maybe" : "maybe value", "must": "must value"}"""
@@ -3156,21 +3156,21 @@ Documentation available at: https://thoth-org.github.io/Thoth.Json/documentation
                 Decode.Auto.fromString<UnionWithMultipleFields>(json, caseStrategy=CamelCase)
                 |> equal (Error "Error at: `$[0]`\nExpecting a string but instead got: 1")
 
-            // testCase "Auto.generateDecoderCached works" <| fun _ ->
-            //     let expected = Ok { Id = 0; Name = "maxime"; Email = "mail@domain.com"; Followers = 0 }
-            //     let json = """{ "id" : 0, "name": "maxime", "email": "mail@domain.com", "followers": 0 }"""
-            //     let decoder1 = Decode.Auto.generateDecoderCached<User>(caseStrategy=CamelCase)
-            //     let decoder2 = Decode.Auto.generateDecoderCached<User>(caseStrategy=CamelCase)
-            //     let actual1 = Decode.fromString decoder1 json
-            //     let actual2 = Decode.fromString decoder2 json
-            //     equal expected actual1
-            //     equal expected actual2
-            //     equal actual1 actual2
+            testCase "Auto.generateDecoderCached works" <| fun _ ->
+                let expected = Ok { Id = 0; Name = "maxime"; Email = "mail@domain.com"; Followers = 0 }
+                let json = """{ "id" : 0, "name": "maxime", "email": "mail@domain.com", "followers": 0 }"""
+                let decoder1 = Decode.Auto.generateDecoderCached<User>(caseStrategy=CamelCase)
+                let decoder2 = Decode.Auto.generateDecoderCached<User>(caseStrategy=CamelCase)
+                let actual1 = Decode.fromString decoder1 json
+                let actual2 = Decode.fromString decoder2 json
+                equal expected actual1
+                equal expected actual2
+                equal actual1 actual2
 
-            // testCase "Auto.fromString works with strange types if they are None" <| fun _ ->
-            //     let json = """{"Id":0}"""
-            //     Decode.Auto.fromString<RecordWithStrangeType>(json)
-            //     |> equal (Ok { Id = 0; Thread = None })
+            testCase "Auto.fromString works with strange types if they are None" <| fun _ ->
+                let json = """{"Id":0}"""
+                Decode.Auto.fromString<RecordWithStrangeType>(json)
+                |> equal (Ok { Id = 0; Thread = None })
 
             testCase "Auto.fromString works with recursive types" <| fun _ ->
                 let vater =

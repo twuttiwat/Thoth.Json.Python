@@ -58,7 +58,7 @@ module Decode =
         let inline isNullValue (_: JsonValue): bool = nativeOnly
 
         /// is the value an integer? This returns false for 1.1, NaN, Infinite, ...
-        let isIntegralValue (o: JsonValue) : bool = (mathMod?isnan(o) |> not) && (mathMod?floor(o) <> 0)
+        let isIntegralValue (o: JsonValue) : bool = (o = 0) || ((mathMod?isnan(o) |> not) && (mathMod?floor(o) <> 0))
 
         [<Emit("($1 <= $0) and ($0 < $2)")>]
         let isBetweenInclusive(_v: JsonValue, _min: obj, _max: obj) = nativeOnly
