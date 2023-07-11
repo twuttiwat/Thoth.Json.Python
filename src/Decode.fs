@@ -1,5 +1,6 @@
 
 namespace Thoth.Json
+open System
 open System.Text.RegularExpressions
 
 [<RequireQualifiedAccess>]
@@ -29,6 +30,9 @@ module Decode =
         // ImportSideEffects("tz", "dateutil")
         [<Import("tz", "dateutil")>]
         let tzMod: obj = nativeOnly
+
+        [<Import("datetime", "datetime")>]
+        let dateTimeMod: obj = nativeOnly
 
         [<Emit("str(type($0))")>]
         let jsTypeof (_ : JsonValue) : string = nativeOnly
@@ -96,6 +100,13 @@ module Decode =
             with ex ->
                 None
 
+        let parseDateTimeOffset (s: string): System.DateTimeOffset = dateParserMod?parse(s)
+
+        let tryParseDateTimeOffset (s: string) =
+            try
+                s |> parseDateTimeOffset |> Some
+            with ex ->
+                None
 
         let getUtc (): obj = tzMod?UTC
 
@@ -107,6 +118,21 @@ module Decode =
 
         [<Emit("$0.replace(tzinfo=None)")>]
         let rec toUniversalTime2 (d: System.DateTime): System.DateTime = nativeOnly
+
+        let GetTimeSpanPortion (parseFn: string -> int) (capture: string) : int =
+            if capture = "" then 0
+            else parseFn capture
+
+        let ParseTimeSpan (ts: string): TimeSpan =
+             let rx = Regex(@"(\d+\.)?(\d+):(\d+):(\d+)(\.\d+)?", RegexOptions.Compiled)
+             let m = rx.Match(ts)
+             let day = GetTimeSpanPortion (fun s -> s.Substring(0, s.Length-1) |> int) m.Groups[1].Value
+             let hour = GetTimeSpanPortion int m.Groups[2].Value
+             let min = GetTimeSpanPortion int m.Groups[3].Value
+             let sec = GetTimeSpanPortion int m.Groups[4].Value
+             let ms = GetTimeSpanPortion (fun s -> s.Substring(0, s.Length-1) |> float |> (*) 1000.0 |> int ) m.Groups[5].Value
+
+             TimeSpan(day,hour,min,sec,ms)
 
     let private genericMsg msg value newLine =
         try
@@ -432,16 +458,20 @@ module Decode =
     let datetimeOffset : Decoder<System.DateTimeOffset> =
         fun path value ->
             if Helpers.isString value then
-                match System.DateTimeOffset.TryParse(Helpers.asString value) with
-                | true, x -> Ok x
-                | _ -> (path, BadPrimitive("a datetimeoffset", value)) |> Error
+                 match Helpers.tryParseDateTimeOffset (Helpers.asString value) with
+                 | Some x -> x |> Ok
+                 | _ -> (path, BadPrimitive("a datetimeoffset", value)) |> Error
+                // match System.DateTimeOffset.TryParse(Helpers.asString value) with
+                // | true, x -> Ok x
+                // | _ -> (path, BadPrimitive("a datetimeoffset", value)) |> Error
             else
                 (path, BadPrimitive("a datetime", value)) |> Error
 
     let timespan : Decoder<System.TimeSpan> =
         fun path value ->
             if Helpers.isString value then
-                Ok System.TimeSpan.Zero
+                Ok (Helpers.ParseTimeSpan (Helpers.asString value))
+                // Ok System.TimeSpan.Zero
                 // match System.TimeSpan.TryParse(Helpers.asString value) with
                 // | true, x -> Ok x
                 // | _ -> (path, BadPrimitive("a timespan", value)) |> Error

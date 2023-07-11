@@ -2747,35 +2747,35 @@ Expecting a boolean but instead got: "not_a_boolean"
                 equal value.Minute res.Minute
                 equal value.Second res.Second
 
-            // testCase "Auto decoders works for datetimeOffset" <| fun _ ->
-            //     let value = DateTimeOffset.Now
-            //     let json = Encode.Auto.toString(4, value)
-            //     let res = Decode.Auto.unsafeFromString<DateTimeOffset>(json).ToLocalTime()
-            //     equal value.Date res.Date
-            //     equal value.Hour res.Hour
-            //     equal value.Minute res.Minute
-            //     equal value.Second res.Second
+            testCase "Auto decoders works for datetimeOffset" <| fun _ ->
+                let value = DateTimeOffset.Now
+                let json = Encode.Auto.toString(4, value)
+                let res = Decode.Auto.unsafeFromString<DateTimeOffset>(json).ToLocalTime()
+                equal value.Date res.Date
+                equal value.Hour res.Hour
+                equal value.Minute res.Minute
+                equal value.Second res.Second
 
-            // testCase "Auto decoders works for datetimeOffset UTC" <| fun _ ->
-            //     let value = DateTimeOffset.UtcNow
-            //     let json = Encode.Auto.toString(4, value)
-            //     // let res = Decode.Auto.unsafeFromString<DateTimeOffset>(json).ToUniversalTime()
-            //     let res = Decode.Auto.unsafeFromString<DateTimeOffset>(json)
-            //     // printfn "SOURCE %A JSON %s OUTPUT %A" value json res
-            //     equal value.Date res.Date
-            //     equal value.Hour res.Hour
-            //     equal value.Minute res.Minute
-            //     equal value.Second res.Second
+            testCase "Auto decoders works for datetimeOffset UTC" <| fun _ ->
+                let value = DateTimeOffset.UtcNow
+                let json = Encode.Auto.toString(4, value)
+                // let res = Decode.Auto.unsafeFromString<DateTimeOffset>(json).ToUniversalTime()
+                let res = Decode.Auto.unsafeFromString<DateTimeOffset>(json)
+                // printfn "SOURCE %A JSON %s OUTPUT %A" value json res
+                equal value.Date res.Date
+                equal value.Hour res.Hour
+                equal value.Minute res.Minute
+                equal value.Second res.Second
 
-            // testCase "Auto decoders works for TimeSpan" <| fun _ ->
-            //     let value = TimeSpan(1,2,3,4,5)
-            //     let json = Encode.Auto.toString(4, value)
-            //     let res = Decode.Auto.unsafeFromString<TimeSpan>(json)
-            //     equal value.Days res.Days
-            //     equal value.Hours res.Hours
-            //     equal value.Minutes res.Minutes
-            //     equal value.Seconds res.Seconds
-            //     equal value.Milliseconds res.Milliseconds
+            testCase "Auto decoders works for TimeSpan" <| fun _ ->
+                let value = TimeSpan(1,2,3,4,5)
+                let json = Encode.Auto.toString(4, value)
+                let res = Decode.Auto.unsafeFromString<TimeSpan>(json)
+                equal value.Days res.Days
+                equal value.Hours res.Hours
+                equal value.Minutes res.Minutes
+                equal value.Seconds res.Seconds
+                equal value.Milliseconds res.Milliseconds
 
             testCase "Auto decoders works for list" <| fun _ ->
                 let value = [1; 2; 3; 4]
