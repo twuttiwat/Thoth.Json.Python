@@ -3186,11 +3186,11 @@ Documentation available at: https://thoth-org.github.io/Thoth.Json/documentation
                 let res = Decode.Auto.unsafeFromString<unit>(json)
                 equal () res
 
-            // testCase "Erased single-case DUs works" <| fun _ ->
-            //     let expected = NoAllocAttributeId (Guid.NewGuid())
-            //     let json = Encode.Auto.toString(4, expected)
-            //     let actual = Decode.Auto.unsafeFromString<NoAllocAttributeId>(json)
-            //     equal expected actual
+            testCase "Erased single-case DUs works" <| fun _ ->
+                let expected = NoAllocAttributeId (Guid.NewGuid())
+                let json = Encode.Auto.toString(4, expected)
+                let actual = Decode.Auto.unsafeFromString<NoAllocAttributeId>(json)
+                equal expected actual
 
             testCase "Auto.unsafeFromString works with HTML inside of a string" <| fun _ ->
                 let expected =
