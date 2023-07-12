@@ -12,14 +12,11 @@ module Encode =
     module Helpers =
         open Python.Interop.Json
 
-        [<ImportAll("json")>]
-        let jsonMod: obj = nativeOnly
-
         let toString (space:int) (o:JsonValue): string =
             if space = 0 then
-                json2.dumps(o, None, (",",":") )
+                json.dumps(o, None, (",",":") )
             else
-                json2.dumps(o, (Some space), (",",":") )
+                json.dumps(o, (Some space), (",",":") )
 
     [<Emit("list($0)")>]
     let private arrayFrom(_: JsonValue seq): JsonValue = nativeOnly

@@ -12,17 +12,8 @@ module Decode =
     open Python.Interop.Json
 
     module Helpers =
-        [<ImportAll("json")>]
-        let jsonMod: obj = nativeOnly
-
         [<ImportAll("math")>]
         let mathMod: obj = nativeOnly
-
-        [<ImportAll("inspect")>]
-        let inspectMod: obj = nativeOnly
-
-        // [<ImportAll("dateutil")>]
-        // let dateutilMod: obj = nativeOnly
 
         [<Import("parser", "dateutil")>]
         let dateParserMod: obj = nativeOnly
@@ -31,13 +22,9 @@ module Decode =
         [<Import("tz", "dateutil")>]
         let tzMod: obj = nativeOnly
 
-        [<Import("datetime", "datetime")>]
-        let dateTimeMod: obj = nativeOnly
-
         [<Emit("str(type($0))")>]
         let jsTypeof (_ : JsonValue) : string = nativeOnly
 
-        //[<Emit("type($0) is json.decoder.JSONDecoderError or type($0) is json.encoder.JSONEncoderError")>]
         let isSyntaxError (o : JsonValue) : bool =
             jsTypeof o = """<class 'json.decoder.JSONDecodeError'>""" ||
             jsTypeof o = """<class 'json.encoder.JSONEncodeError'>"""
@@ -76,8 +63,7 @@ module Decode =
         [<Emit("type($0) is dict and $1 not in $0")>]
         let isFieldUndefined (_: JsonValue) (_: JsonValue): bool = nativeOnly
 
-        // let anyToString (o: JsonValue) : string = jsonMod?dumps(o)
-        let anyToString (o: JsonValue) : string = json2.dumps(o, Some 4)
+        let anyToString (o: JsonValue) : string = json.dumps(o, Some 4)
 
         [<Emit("type($0) is function")>]
         let inline isFunction (_: JsonValue) : bool = nativeOnly
@@ -111,13 +97,10 @@ module Decode =
         let getUtc (): obj = tzMod?UTC
 
         [<Emit("$0.astimezone($1)")>]
-        let toUniversalTime1 (_: System.DateTime) (_: obj): System.DateTime = nativeOnly
+        let toUniversalTime1 (_: DateTime) (_: obj): DateTime = nativeOnly
 
-        let rec toUniversalTime (d: System.DateTime): System.DateTime =
+        let rec toUniversalTime (d: DateTime): DateTime =
             toUniversalTime1 d (getUtc())
-
-        [<Emit("$0.replace(tzinfo=None)")>]
-        let rec toUniversalTime2 (d: System.DateTime): System.DateTime = nativeOnly
 
         let GetTimeSpanPortion (parseFn: string -> int) (capture: string) : int =
             if capture = "" then 0
